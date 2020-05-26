@@ -88,8 +88,10 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno) {
     printf("\n");
     system ("/bin/stty raw");
     int input = getchar();
-    *siguienteTurno = (input == 'n');
     switch (input) {
+        case 'n':
+            *siguienteTurno = true;
+            break;
         case 'a':
             juegoMoverCursorIzquierda(juego);
             break;

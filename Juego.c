@@ -88,11 +88,13 @@ void juegoMoverCursorAbajo(Juego_t* juego) {
 void juegoPrenderCelda(Juego_t* juego) {
     int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
     juego->tablero[posicion] = PRENDIDO;
+    _actualizarCursor(juego);
 }
 
 void juegoApagarCelda(Juego_t* juego) {
     int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
     juego->tablero[posicion] = APAGADO;
+    _actualizarCursor(juego);
 }
 
 //a es un puntero a la posicion 0,0 de la tablero (es el array de la matriz), M es tamanio fila, N es tamanio columna

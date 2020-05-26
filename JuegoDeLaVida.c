@@ -89,18 +89,24 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno) {
     system ("/bin/stty raw");
     int input = getchar();
     *siguienteTurno = (input == 'n');
-    if (input == 'a') {
-        juegoMoverCursorIzquierda(juego);
-    } else if (input == 'd') {
-        juegoMoverCursorDerecha(juego);
-    } else if (input == 'w') {
-        juegoMoverCursorArriba(juego);
-    } else if (input == 's') {
-        juegoMoverCursorAbajo(juego);
-    } else if (input == 'p') {
-        juegoPrenderCelda(juego);
-    } else if (input == 'o') {
-        juegoApagarCelda(juego);
+    switch (input) {
+        case 'a':
+            juegoMoverCursorIzquierda(juego);
+            break;
+        case 'd':
+            juegoMoverCursorDerecha(juego);
+            break;
+        case 'w':
+            juegoMoverCursorArriba(juego);
+            break;
+        case 's':
+            juegoMoverCursorAbajo(juego);
+            break;
+        case 'p':
+            juegoPrenderCelda(juego);
+            break;
+        case 'o':
+            juegoApagarCelda(juego);
     }
     printf("\n");
     system ("/bin/stty cooked");

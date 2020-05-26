@@ -40,7 +40,7 @@ int min(int i, int j) {
   return min;
 }
 
-
+/*
 void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso,
                                               char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
@@ -61,6 +61,16 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
     }
     fclose(archivo);
 }
+ */
+
+void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
+    for (size_t i = 0; i < tam_i; i++) {
+        for (size_t j = 0; j < tam_j; j++) {
+            printf("%c ", matriz[j + i * tam_j]);
+        }
+        printf("\n");
+    }
+}
 
 void _mostrarError(int error) {
   switch (error) {
@@ -74,12 +84,33 @@ void _mostrarError(int error) {
   }
 }
 
+void _inputUsuario(Juego_t* juego, bool* siguienteTurno) {
+    printf("\n");
+    system ("/bin/stty raw");
+    int input = getchar();
+    *siguienteTurno = (input == 'n');
+    if (input == 'a') {
+        juegoMoverCursorIzquierda(juego);
+    } else if (input == 'd') {
+        juegoMoverCursorDerecha(juego);
+    } else if (input == 'w') {
+        juegoMoverCursorArriba(juego);
+    } else if (input == 's') {
+        juegoMoverCursorAbajo(juego);
+    } else if (input == 'p') {
+        juegoPrenderCelda(juego);
+    } else if (input == 'o') {
+        juegoApagarCelda(juego);
+    }
+    printf("\n");
+    system ("/bin/stty cooked");
+}
+
 int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantidad_de_pasos,
     char* nombre_archivo_de_salida) {
 
   const unsigned char* matriz_actual;
   Juego_t juego;
-
 
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
@@ -91,7 +122,12 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     matriz_actual = juegoObtenerEstadoActual(&juego);
-    _imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
+    bool siguienteTurno = false;
+    while (!siguienteTurno) {
+        system("clear");
+        _imprimirMatriz(matriz_actual, tam_i, tam_j, i);
+        _inputUsuario(&juego, &siguienteTurno);
+    }
     juegoAvanzarEstado(&juego);
   }
   juegoDestruir(&juego);

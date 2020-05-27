@@ -19,6 +19,8 @@ unsigned int vecinos(unsigned char* a, unsigned int i, unsigned int j, unsigned 
 
 Coordenada_t obtenerCoordenadaToroidal(int i, int j, unsigned int tam_i, unsigned int tam_j);
 
+
+
 bool juegoEstaElCursor(Juego_t* juego, int i, int j) {
     return ( (i == juego->posicionCursor_i)  && (j == juego->posicionCursor_j) );
 }

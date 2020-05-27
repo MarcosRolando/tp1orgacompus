@@ -269,7 +269,7 @@ void _generarVideoFFMPEG(char* nombre_archivos) {
                                           LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
   memset(comando_video, 0, tamanio);
   char* primera_parte_comando = "ffmpeg -framerate 1 -i ";
-  int chars_copiados = snprintf(comando_video, str(primera_parte_comando) + 1,
+  int chars_copiados = snprintf(comando_video, strlen(primera_parte_comando) + 1,
                                                   "%s", primera_parte_comando);
   chars_copiados += snprintf(comando_video + chars_copiados,
                               bytes_nombre_archivo + 1, "%s", nombre_archivos);
@@ -331,7 +331,7 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
     _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
-  
+
   FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
   if(!posiciones_iniciales) {
     _mostrarError(ERROR_APERTURA_ARCHIVO);

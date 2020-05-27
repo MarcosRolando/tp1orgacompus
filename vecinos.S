@@ -1,4 +1,5 @@
 #include <sys/regdef.h>
+#include "CharsCelulas.h"
 
 #define SS 56
 
@@ -24,8 +25,6 @@
 #define O_ABA_A2 8
 #define O_ABA_A1 4
 #define O_ABA_A0 0
-
-#define APAGADO '0'
 
 .text
 .align 2

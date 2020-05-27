@@ -35,6 +35,9 @@
 #define MIN_CHAR_NUMERO 48
 #define MAX_CHAR_NUMERO 57
 
+#define PBM_CELDA_PRENDIDA "1 "
+#define PBM_CELDA_APAGADA "0 "
+
 void mostrarAyuda() {
     printf("Uso:\n"
            "conway -h\n"
@@ -94,9 +97,9 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
         for (int k = 0; k < 30; ++k) {
             for (size_t j = 0; j < juego->tam_j; j++) {
                 if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
-                    _escalarCelda(archivo, PRENDIDO);
+                    _escalarCelda(archivo, PBM_CELDA_PRENDIDA);
                 } else {
-                    _escalarCelda(archivo, APAGADO);
+                    _escalarCelda(archivo, PBM_CELDA_APAGADA);
                 }
             }
         }

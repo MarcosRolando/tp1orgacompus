@@ -3,9 +3,7 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-
-#define PRENDIDO '1'
-#define APAGADO '0'
+#include "CharsCelulas.h"
 
 typedef struct {
     int i;

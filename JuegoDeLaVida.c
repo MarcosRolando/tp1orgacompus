@@ -40,13 +40,18 @@ int min(int i, int j) {
   return min;
 }
 
+void _escalarCelda(FILE* archivo, char estado) {
+    for (int i = 0; i < 30; ++i) {
+        fprintf(archivo, "%c ", estado);
+    }
+}
 
 void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
                   CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
     int chars_copiados = min(strlen(prefijo_archivo_de_salida),
-                             LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+                                            LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
     memset(nombre_archivo_salida, 0, tamanio);
     strncat(nombre_archivo_salida, prefijo_archivo_de_salida,
             LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
@@ -55,10 +60,16 @@ void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) 
              "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
     FILE *archivo = fopen(nombre_archivo_salida, "w");
-    fprintf(archivo, "P1\n%d %d\n", juego->tam_j, juego->tam_i);
+    fprintf(archivo, "P1\n%d %d\n", juego->tam_j*30, juego->tam_i*30);
     for (size_t i = 0; i < juego->tam_i; i++) {
-        for (size_t j = 0; j < juego->tam_j; j++) {
-            fprintf(archivo, "%c ", juego->tablero[j + i * juego->tam_j]);
+        for (int k = 0; k < 30; ++k) {
+            for (size_t j = 0; j < juego->tam_j; j++) {
+                if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
+                    _escalarCelda(archivo, PRENDIDO);
+                } else {
+                    _escalarCelda(archivo, APAGADO);
+                }
+            }
         }
     }
     fclose(archivo);

@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define PRENDIDO 'O'
-#define APAGADO '-'
+#define PRENDIDO '1'
+#define APAGADO '0'
 
 typedef struct {
     int i;

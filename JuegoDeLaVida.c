@@ -41,8 +41,12 @@ int min(int i, int j) {
 }
 
 /*
+<<<<<<< HEAD
 void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso,
                                               char* prefijo_archivo_de_salida) {
+=======
+void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso, char* prefijo_archivo_de_salida) {
+>>>>>>> 621d25ea59046e7808ee94e805a3b41ab807e1b7
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
                   CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
@@ -66,6 +70,7 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
 }
 */
 
+<<<<<<< HEAD
 void _imprimirMatriz(Juego_t* juego, int paso, bool siguienteTurno) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
@@ -78,6 +83,13 @@ void _imprimirMatriz(Juego_t* juego, int paso, bool siguienteTurno) {
             } else {
                 printf("%c ", juego->tablero[j + i * juego->tam_j]);
             }
+=======
+
+void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
+    for (size_t i = 0; i < tam_i; i++) {
+        for (size_t j = 0; j < tam_j; j++) {
+            printf("%c ", matriz[j + i * tam_j]);
+>>>>>>> 621d25ea59046e7808ee94e805a3b41ab807e1b7
         }
         printf("\n");
     }
@@ -140,6 +152,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     bool siguienteTurno = false;
+    //_imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
     while (!siguienteTurno) {
         system("clear");
         _imprimirMatriz(&juego, i, siguienteTurno);

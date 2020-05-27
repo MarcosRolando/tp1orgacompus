@@ -12,7 +12,24 @@
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
 #define CHARS_PARA_CANTIDAD_DE_PASOS 3
 #define CHARS_EXTENSION_PBM 4
+#define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
 
+#define INDICE_CANTIDAD_DE_TURNOS 1
+#define INDICE_CANTIDAD_FILAS 2
+#define INDICE_CANTIDAD_COLUMNAS 3
+#define INDICE_ARCHIVO_DE_ENTRADA 4
+#define INDICE_ARCHIVO_DE_SALIDA 6
+
+#define CHAR_PROXIMO_TURNO 'n'
+#define CHAR_MOVERSE_IZQUIERDA 'a'
+#define CHAR_MOVERSE_DERECHA 'd'
+#define CHAR_MOVERSE_ARRIBA 'w'
+#define CHAR_MOVERSE_ABAJO 's'
+#define CHAR_PRENDER_CELULA 'p'
+#define CHAR_APAGAR_CELULA 'o'
+
+#define MIN_CHAR_NUMERO 48
+#define MAX_CHAR_NUMERO 57
 
 void mostrarAyuda() {
     printf("Uso:\n"
@@ -85,11 +102,16 @@ void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
-      fprintf(stderr, "Falla la alocacion de memoria\n");
+      fprintf(stderr, "Fallo la alocacion de memoria\n");
       break;
-
     case POSICIONES_INVALIDAS:
-      fprintf(stderr, "Formato del archivo invalido\n");
+      fprintf(stderr, "Formato del archivo inválido\n");
+      break;
+    case ARGUMENTOS_ERRONEOS:
+      fprintf(stderr, "Argumentos inválidos\n");
+      break;
+    case ERROR_APERTURA_ARCHIVO:
+      fprintf(stderr, "No se pudo abrir el archivo\n");
       break;
   }
 }
@@ -98,31 +120,32 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
     printf("\n");
     system ("/bin/stty raw");
     int input = getchar();
+
     switch (input) {
-        case 'n':
+        case CHAR_PROXIMO_TURNO:
             *siguienteTurno = true;
             break;
-        case 'a':
+        case CHAR_MOVERSE_IZQUIERDA:
             juegoMoverCursorIzquierda(juego);
             *quiereEditar = true;
             break;
-        case 'd':
+        case CHAR_MOVERSE_DERECHA:
             juegoMoverCursorDerecha(juego);
             *quiereEditar = true;
             break;
-        case 'w':
+        case CHAR_MOVERSE_ARRIBA:
             juegoMoverCursorArriba(juego);
             *quiereEditar = true;
             break;
-        case 's':
+        case CHAR_MOVERSE_ABAJO:
             juegoMoverCursorAbajo(juego);
             *quiereEditar = true;
             break;
-        case 'p':
+        case CHAR_PRENDER_CELULA:
             juegoPrenderCelda(juego);
             *quiereEditar = true;
             break;
-        case 'o':
+        case CHAR_APAGAR_CELULA:
             juegoApagarCelda(juego);
             *quiereEditar = true;
     }
@@ -161,31 +184,57 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 }
 
 
-int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
+bool _esNumero(const char* string, int largo){
+  for (size_t i = 0; i < len; i++) {
+    if ((string[i] < MIN_CHAR_NUMERO) || ((string[i] > MAX_CHAR_NUMERO))) {
+      return false;
+    }
+  }
+  return true;
+}
 
-  FILE* posiciones_iniciales = fopen(args[4], "r");
+bool _sonArgumentosValidos(char** args, int cantidad_args){
+  for (int i = 0; i < cantidad_args; i++) {
+    if(!_esNumero(args[i], strlen(args[i])){
+        return false;
+    }
+  }
+  return true;
+}
+
+
+int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
+  int estado_de_programa = EXITO;
+  if (!_sonArgumentosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
+    //fprintf(stderr, "Argumentos inválidos\n");
+    return ARGUMENTOS_ERRONEOS;
+  }
+
+  FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
   if(!posiciones_iniciales) {
     fprintf(stderr, "No se pudo abrir el archivo\n");
     return ERROR_APERTURA_ARCHIVO;
   }
-  //AGREGAR CASO EN EL QUE NO SE ESCRIBE EL -o Y SU PREFIJO EN LOS ARGUMENTOS
+
   switch (cantidad_args) {
     case ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA:
-    //CAMBIAR LOS NUMEROS POR CONSTANTES
-      return _ejecutarJuego(posiciones_iniciales, atoi(args[2]), atoi(args[3]),
-                                                      atoi(args[1]), args[6]);
+      estado_de_programa = _ejecutarJuego(posiciones_iniciales,
+            atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
+            atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]);
+
     case ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA:
-      return _ejecutarJuego(posiciones_iniciales, atoi(args[2]),atoi(args[3]),
-                                                      atoi(args[1]), args[4]);
+      estado_de_programa = _ejecutarJuego(posiciones_iniciales,
+        atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
+        atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
+
     case ARGUMENTOS_MODO:
       if (!strncmp(args[1], "-h", 2)) mostrarAyuda();
       break;
     default:
-      fprintf(stderr, "Argumentos Erroneos\n");
-      return ARGUMENTOS_ERRONEOS;
+      //fprintf(stderr, "Argumentos inválidos\n");
+      estado_de_programa = ARGUMENTOS_ERRONEOS;
   }
-
-  //AGREGAR CHEQUEO DE INPUT
   fclose(posiciones_iniciales);
-  return EXITO;
+  _mostrarError(estado_de_programa);
+  return estado_de_programa;
 }

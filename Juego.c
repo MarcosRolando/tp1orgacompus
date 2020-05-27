@@ -8,8 +8,6 @@
 
 /*i es FILA, j es COLUMNA*/
 
-#define PRENDIDO 'O'
-#define APAGADO '-'
 #define CANTIDAD_MINIMA_SUPERVIVENCIA 2
 #define CANTIDAD_MAXIMA_SUPERVIVENCIA 3
 #define CANTIDAD_PARA_NACER 3
@@ -19,7 +17,7 @@ int obtenerIndiceMatriz(int tam_j, unsigned int i, unsigned int j);
 
 unsigned int vecinos(unsigned char* a, unsigned int i, unsigned int j, unsigned int M, unsigned int N);
 
-/*
+
 int obtenerIndiceMatriz(int tam_j, unsigned int i, unsigned int j) {
   return j + i * tam_j;
 }
@@ -44,65 +42,45 @@ Coordenada_t obtenerCoordenadaToroidal(int i, int j, unsigned int tam_i, unsigne
   }
   return coordenada;
 }
-*/
-void _actualizarCursor(Juego_t* juego) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
-    int celda = juego->tablero[posicion];
-    if (celda == APAGADO) juego->tablero[posicion] = '+';
-    else juego->tablero[posicion] = '0';
-}
 
-void _restaurarCelda(Juego_t* juego) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
-    int celda = juego->tablero[posicion];
-    if (celda == '+') juego->tablero[posicion] = APAGADO;
-    else if (celda == '0') juego->tablero[posicion] = PRENDIDO;
+bool juegoEstaElCursor(Juego_t* juego, int i, int j) {
+    return ( (i == juego->posicionCursor_i)  && (j == juego->posicionCursor_j) );
 }
 
 void juegoMoverCursorIzquierda(Juego_t* juego) {
     if (juego->posicionCursor_j > 0) {
-        _restaurarCelda(juego);
         juego->posicionCursor_j--;
-        _actualizarCursor(juego);
     }
 }
 
 void juegoMoverCursorDerecha(Juego_t* juego) {
     if (juego->posicionCursor_j < (juego->tam_j - 1)) {
-        _restaurarCelda(juego);
         juego->posicionCursor_j++;
-        _actualizarCursor(juego);
     }
 }
 
 void juegoMoverCursorArriba(Juego_t* juego) {
     if (juego->posicionCursor_i > 0) {
-        _restaurarCelda(juego);
         juego->posicionCursor_i--;
-        _actualizarCursor(juego);
     }
 }
 
 void juegoMoverCursorAbajo(Juego_t* juego) {
     if (juego->posicionCursor_i < (juego->tam_i - 1)) {
-        _restaurarCelda(juego);
         juego->posicionCursor_i++;
-        _actualizarCursor(juego);
     }
 }
 
 void juegoPrenderCelda(Juego_t* juego) {
     int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
     juego->tablero[posicion] = PRENDIDO;
-    _actualizarCursor(juego);
 }
 
 void juegoApagarCelda(Juego_t* juego) {
     int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
     juego->tablero[posicion] = APAGADO;
-    _actualizarCursor(juego);
 }
-/*
+
 //a es un puntero a la posicion 0,0 de la tablero (es el array de la matriz), M es tamanio fila, N es tamanio columna
 unsigned int vecinos(unsigned char *a, unsigned int i, unsigned int j, unsigned int M, unsigned int N) {
   unsigned int vecinos_encendidos = 0;
@@ -115,14 +93,16 @@ unsigned int vecinos(unsigned char *a, unsigned int i, unsigned int j, unsigned 
         //REVISAR SI ESTO ANDA
         coordenadaVecino = obtenerCoordenadaToroidal(i + k, j + l, M, N);
         posVecino = obtenerIndiceMatriz(N, coordenadaVecino.i, coordenadaVecino.j);
-        if (a[posVecino] == PRENDIDO) vecinos_encendidos++;
+        if (a[posVecino] == PRENDIDO) {
+            vecinos_encendidos++;
+        }
       }
 
     }
   }
   return vecinos_encendidos;
 }
-*/
+
 
 /*Actualiza la celda en la nueva tablero*/
 static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, int i, int j) {

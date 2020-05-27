@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#define PRENDIDO 'O'
+#define APAGADO '-'
+
 typedef struct {
     int i;
     int j;
@@ -22,6 +25,8 @@ int juegoCrear(Juego_t* juego, FILE* posiciones_iniciales, int tam_i, int tam_j)
 
 //Libera los recursos del objeto Juego
 void juegoDestruir(Juego_t* juego);
+
+bool juegoEstaElCursor(Juego_t* juego, int i, int j);
 
 void juegoMoverCursorIzquierda(Juego_t* juego);
 

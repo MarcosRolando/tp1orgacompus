@@ -6,6 +6,8 @@
 #include "Juego.h"
 #include "Estado.h"
 
+#define ESCALA_CELULA_PBM 30
+
 #define ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA 7
 #define ARGUMENTOS_MODO_MANUAL 6
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
@@ -64,18 +66,29 @@ int min(int i, int j) {
   return min;
 }
 
-void _escalarCelda(FILE* archivo, char estado) {
-    for (int i = 0; i < 30; ++i) {
-        fprintf(archivo, "%c ", estado);
-    }
-}
-
 
 bool _stringsSonIguales(const char* string1, const char* string2){
   if (strlen(string1) != strlen(string2)) {
     return false;
   }
   return !strcmp(string1, string2);
+}
+
+
+void _escalarCelda(FILE* archivo, char estado) {
+    for (int i = 0; i < ESCALA_CELULA_PBM; ++i) {
+        fprintf(archivo, "%c ", estado);
+    }
+}
+
+void _escalarFila(Juego_t* juego, unsigned int i){
+  for (int j = 0; j < juego->tam_j; j++) { /*Itera las columnas del tablero*/
+      if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
+          _escalarCelda(archivo, PBM_CELDA_PRENDIDA); /*Imprime ESCALA_CELULA_PBM veces*/
+      } else {
+          _escalarCelda(archivo, PBM_CELDA_APAGADA); /*Imprime ESCALA_CELULA_PBM veces*/
+      }
+  }
 }
 
 void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
@@ -92,16 +105,10 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
              "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
     FILE *archivo = fopen(nombre_archivo_salida, "w");
-    fprintf(archivo, "P1\n%d %d\n", juego->tam_j*30, juego->tam_i*30);
-    for (size_t i = 0; i < juego->tam_i; i++) {
-        for (int k = 0; k < 30; ++k) {
-            for (size_t j = 0; j < juego->tam_j; j++) {
-                if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
-                    _escalarCelda(archivo, PBM_CELDA_PRENDIDA);
-                } else {
-                    _escalarCelda(archivo, PBM_CELDA_APAGADA);
-                }
-            }
+    fprintf(archivo, "P1\n%d %d\n", juego->tam_j*ESCALA_CELULA_PBM, juego->tam_i*ESCALA_CELULA_PBM);
+    for (int i = 0; i < juego->tam_i; i++) { /*Itera las filas del tablero*/
+        for (int k = 0; k < ESCALA_CELULA_PBM; ++k) { /*Repite la fila ESCALA_CELULA_PBM veces*/
+          _escalarFila(juego, i);
         }
     }
     fclose(archivo);
@@ -246,6 +253,18 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
   return true;
 }
 
+void _generarVideoFFMPEG(char* nombre_archivos) {
+  int tamanio = 41 + strlen(nombre_archivos) + 1; /*+1 por el \0*/
+  char comando_video[tamanio];
+  int bytes_nombre_archivo = min(strlen(nombre_archivos),
+                                          LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+  memset(comando_video, 0, tamanio);
+  int chars_copiados = snprintf(comando_video, 24, "ffmpeg -framerate 1 -i ");
+  chars_copiados += snprintf(comando_video + chars_copiados, bytes_nombre_archivo, nombre_archivos);
+  snprintf(comando_video + chars_copiados, 19, "%00d.pbm video.avi");
+  system(comando_video);
+}
+
 int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales) {
   int estado_de_programa = EXITO;
   switch (cantidad_args) {
@@ -254,6 +273,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
         estado_de_programa = _ejecutarJuego(posiciones_iniciales,
           atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
           atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA], false);
+        _generarVideoFMMPEG(args[INDICE_ARCHIVO_DE_SALIDA]);
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
@@ -263,6 +283,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
             atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
             atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA], false);
+      _generarVideoFMMPEG(args[INDICE_ARCHIVO_DE_ENTRADA]);
       break;
 
     case ARGUMENTOS_MODO_AYUDA:

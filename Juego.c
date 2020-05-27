@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "CharsCelulas.h"
 
 /*i es FILA, j es COLUMNA*/
 

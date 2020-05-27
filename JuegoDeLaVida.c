@@ -35,8 +35,8 @@
 #define MIN_CHAR_NUMERO 48
 #define MAX_CHAR_NUMERO 57
 
-#define PBM_CELDA_PRENDIDA "1 "
-#define PBM_CELDA_APAGADA "0 "
+#define PBM_CELDA_PRENDIDA '1'
+#define PBM_CELDA_APAGADA '0'
 
 void mostrarAyuda() {
     printf("Uso:\n"

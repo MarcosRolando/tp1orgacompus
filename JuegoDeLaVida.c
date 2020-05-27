@@ -68,7 +68,7 @@ void _escalarCelda(FILE* archivo, char estado) {
 }
 
 
-bool _stringsSonIguales(char* string1, char* string2){
+bool _stringsSonIguales(const char* string1, const char* string2){
   if (strlen(string1) != strlen(string2)) {
     return false;
   }

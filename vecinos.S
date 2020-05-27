@@ -123,6 +123,14 @@ endloop:
   .end vecinos
 
 
+  #undef O_A0
+  #undef O_A1
+  #undef O_A2
+  #undef O_A3
+  #undef O_GP
+  #undef O_FP
+  #undef SS
+
   #define INDICE_INICIAL 0
 
 

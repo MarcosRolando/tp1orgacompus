@@ -250,7 +250,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       if (_stringsSonIguales(args[5], "-o")) {
         estado_de_programa = _ejecutarJuego(posiciones_iniciales,
           atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
-          atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]);
+          atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]), false;
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
@@ -259,7 +259,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
     case ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA:
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
             atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
-            atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
+            atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA], false);
       break;
 
     case ARGUMENTOS_MODO_AYUDA:
@@ -273,7 +273,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       if (_stringsSonIguales(args[5], "-manual")) {
         estado_de_programa = _ejecutarJuego(posiciones_iniciales,
               atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
-              atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
+              atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA], true);
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }

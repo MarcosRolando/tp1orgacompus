@@ -32,7 +32,7 @@
 #define CHAR_PRENDER_CELULA 'p'
 #define CHAR_APAGAR_CELULA 'o'
 
-#define MIN_CHAR_NUMERO 48
+#define MIN_CHAR_NUMERO 49
 #define MAX_CHAR_NUMERO 57
 
 void mostrarAyuda() {

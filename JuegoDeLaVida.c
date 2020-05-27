@@ -75,7 +75,7 @@ bool _stringsSonIguales(const char* string1, const char* string2){
   return !strcmp(string1, string2);
 }
 
-void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
+void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
                   CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
@@ -105,7 +105,7 @@ void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) 
 }
 
 /*
-void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
+void _imprimirMatrizManual(Juego_t* juego, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
             if (juegoEstaElCursor(juego, i, j) && quiereEditar) {
@@ -173,31 +173,39 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
     system ("/bin/stty cooked");
 }
 
-int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantidad_de_pasos,
-    char* nombre_archivo_de_salida) {
+
+void _procesarMatrizManual(Juego_t* juego, int paso_actual) {
+  bool siguienteTurno = false;
+  bool quiereEditar = false;
+  while (!siguienteTurno) {
+    system("clear");
+    _imprimirMatrizManual(&juego, pasoActual, quiereEditar);
+    _inputUsuario(&juego, &siguienteTurno, &quiereEditar);
+  }
+}
+
+
+int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantidad_de_pasos
+    char* nombre_archivo_de_salida, bool es_modo_manual) {
 
   Juego_t juego;
 
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
   if (estado_de_programa != EXITO) {
-    //_mostrarError(estado_de_programa);
     juegoDestruir(&juego);
     return estado_de_programa;
   }
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
-    //bool siguienteTurno = false;
-    //bool quiereEditar = false;
-    _imprimirMatriz(&juego, i, nombre_archivo_de_salida);
-    /*
-    while (!siguienteTurno) {
-        system("clear");
-        _imprimirMatriz(&juego, i, quiereEditar);
-        _inputUsuario(&juego, &siguienteTurno, &quiereEditar);
+
+    if (es_modo_manual) {
+      _procesarMatrizManual(juego, i);
+    } else {
+      _imprimirMatrizArchivo(&juego, i, nombre_archivo_de_salida);
     }
-    */
     juegoAvanzarEstado(&juego);
+
   }
   juegoDestruir(&juego);
   return EXITO;
@@ -236,21 +244,8 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
   return true;
 }
 
-
-int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
+int _ejecutarComando(char** args, int cantidad_args) {
   int estado_de_programa = EXITO;
-
-  if (!_sonArgumentosValidos(args, cantidad_args)) {
-    _mostrarError(ARGUMENTOS_ERRONEOS);
-    return ARGUMENTOS_ERRONEOS;
-  }
-
-  FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
-  if(!posiciones_iniciales) {
-    _mostrarError(ERROR_APERTURA_ARCHIVO);
-    return ERROR_APERTURA_ARCHIVO;
-  }
-
   switch (cantidad_args) {
     case ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA:
       if (_stringsSonIguales(args[5], "-o")) {
@@ -276,12 +271,33 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
       }
       break;
     case ARGUMENTOS_MODO_MANUAL:
-      if (_stringsSonIguales(args[5], "-manual")){
-
+      if (_stringsSonIguales(args[5], "-manual")) {
+        estado_de_programa = _ejecutarJuego(posiciones_iniciales,
+              atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
+              atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
     }
+    return estado_de_programa;
+}
+
+
+int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
+  int estado_de_programa = EXITO;
+
+  if (!_sonArgumentosValidos(args, cantidad_args)) {
+    _mostrarError(ARGUMENTOS_ERRONEOS);
+    return ARGUMENTOS_ERRONEOS;
+  }
+
+  FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
+  if(!posiciones_iniciales) {
+    _mostrarError(ERROR_APERTURA_ARCHIVO);
+    return ERROR_APERTURA_ARCHIVO;
+  }
+
+  estado_de_programa = _ejecutarComando(args, cantidad_args);
 
   fclose(posiciones_iniciales);
   _mostrarError(estado_de_programa);

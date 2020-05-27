@@ -196,7 +196,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
 
 bool _esNumero(const char* string, int largo){
-  for (size_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < largo; i++) {
     if ((string[i] < MIN_CHAR_NUMERO) || ((string[i] > MAX_CHAR_NUMERO))) {
       return false;
     }
@@ -206,7 +206,7 @@ bool _esNumero(const char* string, int largo){
 
 bool _sonArgumentosValidos(char** args, int cantidad_args){
   for (int i = 0; i < cantidad_args; i++) {
-    if(!_esNumero(args[i], strlen(args[i])){
+    if(!_esNumero(args[i], strlen(args[i]))) {
         return false;
     }
   }

@@ -32,7 +32,7 @@
 #define CHAR_PRENDER_CELULA 'p'
 #define CHAR_APAGAR_CELULA 'o'
 
-#define MIN_CHAR_NUMERO 49
+#define MIN_CHAR_NUMERO 48
 #define MAX_CHAR_NUMERO 57
 
 void mostrarAyuda() {
@@ -204,7 +204,10 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 }
 
 
-bool _esNumero(const char* string, int largo){
+bool _esNumeroPositivo(const char* string, int largo){
+  if (_stringsSonIguales(string, "0")) {
+    return false;
+  }
   for (size_t i = 0; i < largo; i++) {
     if ((string[i] < MIN_CHAR_NUMERO) || ((string[i] > MAX_CHAR_NUMERO))) {
       return false;
@@ -215,7 +218,7 @@ bool _esNumero(const char* string, int largo){
 
 bool _sonNumerosValidos(char** args, int cantidad_args_con_numero){
   for (int i = 0; i < cantidad_args_con_numero; i++) {
-    if(!_esNumero(args[i], strlen(args[i]))) {
+    if(!_esNumeroPositivo(args[i], strlen(args[i]))) {
         return false;
     }
   }

@@ -66,10 +66,10 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
 }
 */
 
-void _imprimirMatriz(Juego_t* juego, int paso, bool siguienteTurno) {
+void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
-            if (juegoEstaElCursor(juego, i, j)) {
+            if (juegoEstaElCursor(juego, i, j) && quiereEditar) {
                 if (juego->tablero[j + i * juego->tam_j] == APAGADO) {
                     printf("+ ");
                 } else {
@@ -95,7 +95,7 @@ void _mostrarError(int error) {
   }
 }
 
-void _inputUsuario(Juego_t* juego, bool* siguienteTurno) {
+void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
     printf("\n");
     system ("/bin/stty raw");
     int input = getchar();
@@ -105,21 +105,27 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno) {
             break;
         case 'a':
             juegoMoverCursorIzquierda(juego);
+            *quiereEditar = true;
             break;
         case 'd':
             juegoMoverCursorDerecha(juego);
+            *quiereEditar = true;
             break;
         case 'w':
             juegoMoverCursorArriba(juego);
+            *quiereEditar = true;
             break;
         case 's':
             juegoMoverCursorAbajo(juego);
+            *quiereEditar = true;
             break;
         case 'p':
             juegoPrenderCelda(juego);
+            *quiereEditar = true;
             break;
         case 'o':
             juegoApagarCelda(juego);
+            *quiereEditar = true;
     }
     printf("\n");
     system ("/bin/stty cooked");
@@ -140,11 +146,12 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     bool siguienteTurno = false;
+    bool quiereEditar = false;
     //_imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
     while (!siguienteTurno) {
         system("clear");
-        _imprimirMatriz(&juego, i, siguienteTurno);
-        _inputUsuario(&juego, &siguienteTurno);
+        _imprimirMatriz(&juego, i, quiereEditar);
+        _inputUsuario(&juego, &siguienteTurno, &quiereEditar);
     }
     juegoAvanzarEstado(&juego);
   }

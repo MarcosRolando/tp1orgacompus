@@ -274,7 +274,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
         estado_de_programa = _ejecutarJuego(posiciones_iniciales,
           atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
           atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA], false);
-        _generarVideoFMMPEG(args[INDICE_ARCHIVO_DE_SALIDA]);
+        _generarVideoFFMPEG(args[INDICE_ARCHIVO_DE_SALIDA]);
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
@@ -284,7 +284,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
             atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
             atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA], false);
-      _generarVideoFMMPEG(args[INDICE_ARCHIVO_DE_ENTRADA]);
+      _generarVideoFFMPEG(args[INDICE_ARCHIVO_DE_ENTRADA]);
       break;
 
     case ARGUMENTOS_MODO_AYUDA:

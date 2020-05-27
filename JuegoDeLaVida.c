@@ -40,9 +40,8 @@ int min(int i, int j) {
   return min;
 }
 
-/*
-void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso,
-                                              char* prefijo_archivo_de_salida) {
+
+void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
                   CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
@@ -56,16 +55,16 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
              "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
     FILE *archivo = fopen(nombre_archivo_salida, "w");
-    fprintf(archivo, "P1\n%d %d\n", tam_j, tam_i);
-    for (size_t i = 0; i < tam_i; i++) {
-        for (size_t j = 0; j < tam_j; j++) {
-            fprintf(archivo, "%c ", matriz[j + i * tam_j]);
+    fprintf(archivo, "P1\n%d %d\n", juego->tam_j, juego->tam_i);
+    for (size_t i = 0; i < juego->tam_i; i++) {
+        for (size_t j = 0; j < juego->tam_j; j++) {
+            fprintf(archivo, "%c ", juego->tablero[j + i * juego->tam_j]);
         }
     }
     fclose(archivo);
 }
-*/
 
+/*
 void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
@@ -82,7 +81,7 @@ void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
         printf("\n");
     }
 }
-
+*/
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
@@ -145,14 +144,16 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   }
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
-    bool siguienteTurno = false;
-    bool quiereEditar = false;
-    //_imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
+    //bool siguienteTurno = false;
+    //bool quiereEditar = false;
+    _imprimirMatriz(&juego, i, nombre_archivo_de_salida);
+    /*
     while (!siguienteTurno) {
         system("clear");
         _imprimirMatriz(&juego, i, quiereEditar);
         _inputUsuario(&juego, &siguienteTurno, &quiereEditar);
     }
+    */
     juegoAvanzarEstado(&juego);
   }
   juegoDestruir(&juego);

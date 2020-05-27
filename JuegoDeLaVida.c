@@ -7,6 +7,7 @@
 #include "Estado.h"
 
 #define ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA 7
+#define ARGUMENTOS_MODO_MANUAL 6
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
 #define ARGUMENTOS_MODO_AYUDA 2
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
@@ -64,6 +65,14 @@ void _escalarCelda(FILE* archivo, char estado) {
     for (int i = 0; i < 30; ++i) {
         fprintf(archivo, "%c ", estado);
     }
+}
+
+
+bool _stringsSonIguales(char* string1, char* string2){
+  if (strlen(string1) != strlen(string2)) {
+    return false;
+  }
+  return !strcmp(string1, string2);
 }
 
 void _imprimirMatriz(Juego_t* juego, int paso, char* prefijo_archivo_de_salida) {
@@ -204,8 +213,8 @@ bool _esNumero(const char* string, int largo){
   return true;
 }
 
-bool _sonNumerosValidos(char** args, int cantidad_args){
-  for (int i = 0; i < cantidad_args; i++) {
+bool _sonNumerosValidos(char** args, int cantidad_args_con_numero){
+  for (int i = 0; i < cantidad_args_con_numero; i++) {
     if(!_esNumero(args[i], strlen(args[i]))) {
         return false;
     }
@@ -216,7 +225,6 @@ bool _sonNumerosValidos(char** args, int cantidad_args){
 bool _sonArgumentosValidos(char** args, int cantidad_args){
   if ((cantidad_args < MIN_CANTIDAD_ARGUMENTOS) ||
                                       cantidad_args > MAX_CANTIDAD_ARGUMENTOS) {
-    _mostrarError(ARGUMENTOS_ERRONEOS);
     return false;
   }
   if (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
@@ -229,7 +237,7 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
 int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
   int estado_de_programa = EXITO;
 
-  if (!_sonArgumentosValidos(char** args, int cantidad_args)) {
+  if (!_sonArgumentosValidos(args, cantidad_args)) {
     _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
@@ -240,32 +248,38 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
     return ERROR_APERTURA_ARCHIVO;
   }
 
-  while (true) {
-    if (true) {
-      break;
-    }
-  }
-
   switch (cantidad_args) {
     case ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA:
-      if (strcmp(args[5], "-o")) {
+      if (_stringsSonIguales(args[5], "-o")) {
+        estado_de_programa = _ejecutarJuego(posiciones_iniciales,
+          atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
+          atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]);
+      } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
-        break;
       }
-      estado_de_programa = _ejecutarJuego(posiciones_iniciales,
-            atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
-            atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]);
+      break;
 
     case ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA:
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
             atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
             atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
+      break;
 
     case ARGUMENTOS_MODO_AYUDA:
-      if (!strncmp(args[1], "-h", 2)) mostrarAyuda();
+      if (_stringsSonIguales(args[1], "-h")) {
+        mostrarAyuda();
+      } else {
+        estado_de_programa = ARGUMENTOS_ERRONEOS;
+      }
       break;
-    case :
-  }
+    case ARGUMENTOS_MODO_MANUAL:
+      if (_stringsSonIguales(args[5], "-manual")){
+
+      } else {
+        estado_de_programa = ARGUMENTOS_ERRONEOS;
+      }
+    }
+
   fclose(posiciones_iniciales);
   _mostrarError(estado_de_programa);
   return estado_de_programa;

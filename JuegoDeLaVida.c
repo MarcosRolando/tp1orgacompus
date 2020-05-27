@@ -8,11 +8,14 @@
 
 #define ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA 7
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
-#define ARGUMENTOS_MODO 2
+#define ARGUMENTOS_MODO_AYUDA 2
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
 #define CHARS_PARA_CANTIDAD_DE_PASOS 3
 #define CHARS_EXTENSION_PBM 4
 #define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
+
+#define MIN_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA
+#define MAX_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA
 
 #define INDICE_CANTIDAD_DE_TURNOS 1
 #define INDICE_CANTIDAD_FILAS 2
@@ -131,34 +134,31 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
     printf("\n");
     system ("/bin/stty raw");
     int input = getchar();
-
+    *quiereEditar = true;
     switch (input) {
         case CHAR_PROXIMO_TURNO:
             *siguienteTurno = true;
             break;
         case CHAR_MOVERSE_IZQUIERDA:
             juegoMoverCursorIzquierda(juego);
-            *quiereEditar = true;
             break;
         case CHAR_MOVERSE_DERECHA:
             juegoMoverCursorDerecha(juego);
-            *quiereEditar = true;
             break;
         case CHAR_MOVERSE_ARRIBA:
             juegoMoverCursorArriba(juego);
-            *quiereEditar = true;
             break;
         case CHAR_MOVERSE_ABAJO:
             juegoMoverCursorAbajo(juego);
-            *quiereEditar = true;
             break;
         case CHAR_PRENDER_CELULA:
             juegoPrenderCelda(juego);
-            *quiereEditar = true;
             break;
         case CHAR_APAGAR_CELULA:
             juegoApagarCelda(juego);
-            *quiereEditar = true;
+            break;
+        default:
+            *quiereEditar = false;
     }
     printf("\n");
     system ("/bin/stty cooked");
@@ -204,7 +204,7 @@ bool _esNumero(const char* string, int largo){
   return true;
 }
 
-bool _sonArgumentosValidos(char** args, int cantidad_args){
+bool _sonNumerosValidos(char** args, int cantidad_args){
   for (int i = 0; i < cantidad_args; i++) {
     if(!_esNumero(args[i], strlen(args[i]))) {
         return false;
@@ -213,39 +213,58 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
   return true;
 }
 
+bool _sonArgumentosValidos(char** args, int cantidad_args){
+  if ((cantidad_args < MIN_CANTIDAD_ARGUMENTOS) ||
+                                      cantidad_args > MAX_CANTIDAD_ARGUMENTOS) {
+    _mostrarError(ARGUMENTOS_ERRONEOS);
+    return false;
+  }
+  if (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
+    return false;
+  }
+  return true;
+}
+
 
 int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
   int estado_de_programa = EXITO;
-  if (!_sonArgumentosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
-    //fprintf(stderr, "Argumentos inválidos\n");
+
+  if (!_sonArgumentosValidos(char** args, int cantidad_args)) {
     _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
 
   FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
   if(!posiciones_iniciales) {
-    //fprintf(stderr, "No se pudo abrir el archivo\n");
     _mostrarError(ERROR_APERTURA_ARCHIVO);
     return ERROR_APERTURA_ARCHIVO;
   }
 
+  while (true) {
+    if (true) {
+      break;
+    }
+  }
+
   switch (cantidad_args) {
     case ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA:
+      if (strcmp(args[5], "-o")) {
+        estado_de_programa = ARGUMENTOS_ERRONEOS;
+        break;
+      }
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
             atoi(args[INDICE_CANTIDAD_FILAS]), atoi(args[INDICE_CANTIDAD_COLUMNAS]),
             atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_SALIDA]);
 
     case ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA:
       estado_de_programa = _ejecutarJuego(posiciones_iniciales,
-        atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
-        atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
+            atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
+            atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA]);
 
-    case ARGUMENTOS_MODO:
+    case ARGUMENTOS_MODO_AYUDA:
       if (!strncmp(args[1], "-h", 2)) mostrarAyuda();
       break;
-    default:
-      //fprintf(stderr, "Argumentos inválidos\n");
-      estado_de_programa = ARGUMENTOS_ERRONEOS;
+    case :
   }
   fclose(posiciones_iniciales);
   _mostrarError(estado_de_programa);

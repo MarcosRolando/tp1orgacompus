@@ -15,7 +15,7 @@ typedef struct {
   int tam_i;
   int tam_j;
   int posicionCursor_i;
-    int posicionCursor_j;
+  int posicionCursor_j;
 } Juego_t;
 
 //Inicializa el objeto Juego

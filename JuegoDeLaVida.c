@@ -17,6 +17,9 @@
 #define CHARS_EXTENSION_PBM 4
 #define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
 
+#define CURSOR_CELDA_APAGADA  "+ "
+#define CURSOR_CELDA_PRENDIDA "0 "
+
 #define MIN_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA
 #define MAX_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA
 
@@ -24,7 +27,10 @@
 #define INDICE_CANTIDAD_FILAS 2
 #define INDICE_CANTIDAD_COLUMNAS 3
 #define INDICE_ARCHIVO_DE_ENTRADA 4
+#define INDICE_MODO_DE_JUEGO 5
 #define INDICE_ARCHIVO_DE_SALIDA 6
+
+#define FFMPEG_BUFFER_LENGTH 42
 
 #define CHAR_PROXIMO_TURNO 'n'
 #define CHAR_MOVERSE_IZQUIERDA 'a'
@@ -58,6 +64,10 @@ void mostrarAyuda() {
            "el prefijo será el nombre del archivo de entrada.);\n");
 }
 
+void mostrarVersion() {
+  printf("Versión 1.0\n");
+}
+
 int min(int i, int j) {
   int min = i;
   if (min > j) {
@@ -67,7 +77,7 @@ int min(int i, int j) {
 }
 
 
-bool _stringsSonIguales(const char* string1, const char* string2){
+bool _stringsSonIguales(const char* string1, const char* string2) {
   if (strlen(string1) != strlen(string2)) {
     return false;
   }
@@ -81,7 +91,7 @@ void _escalarCelda(FILE* archivo, char estado) {
     }
 }
 
-void _escalarFila(Juego_t* juego, unsigned int i, FILE* archivo){
+void _escalarFila(Juego_t* juego, unsigned int i, FILE* archivo) {
   for (int j = 0; j < juego->tam_j; j++) { /*Itera las columnas del tablero*/
       if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
           _escalarCelda(archivo, PBM_CELDA_PRENDIDA); /*Imprime ESCALA_CELULA_PBM veces*/
@@ -119,9 +129,9 @@ void _imprimirMatrizManual(Juego_t* juego, int paso, bool quiereEditar) {
         for (size_t j = 0; j < juego->tam_j; j++) {
             if (juegoEstaElCursor(juego, i, j) && quiereEditar) {
                 if (juego->tablero[j + i * juego->tam_j] == APAGADO) {
-                    printf("+ ");
+                    printf(CURSOR_CELDA_APAGADA);
                 } else {
-                    printf("0 ");
+                    printf(CURSOR_CELDA_PRENDIDA);
                 }
             } else {
                 printf("%c ", juego->tablero[j + i * juego->tam_j]);
@@ -198,7 +208,6 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
                         char* nombre_archivo_de_salida, bool es_modo_manual) {
 
   Juego_t juego;
-
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
   if (estado_de_programa != EXITO) {
@@ -207,21 +216,20 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   }
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
-
     if (es_modo_manual) {
       _procesarMatrizManual(&juego, i);
     } else {
       _imprimirMatrizArchivo(&juego, i, nombre_archivo_de_salida);
     }
     juegoAvanzarEstado(&juego);
-
   }
+
   juegoDestruir(&juego);
   return EXITO;
 }
 
 
-bool _esNumeroPositivo(const char* string, int largo){
+bool _esNumeroPositivo(const char* string, int largo) {
   if (_stringsSonIguales(string, "0")) {
     return false;
   }
@@ -233,7 +241,7 @@ bool _esNumeroPositivo(const char* string, int largo){
   return true;
 }
 
-bool _sonNumerosValidos(char** args, int cantidad_args_con_numero){
+bool _sonNumerosValidos(char** args, int cantidad_args_con_numero) {
   for (int i = 0; i < cantidad_args_con_numero; i++) {
     if(!_esNumeroPositivo(args[i], strlen(args[i]))) {
         return false;
@@ -242,9 +250,10 @@ bool _sonNumerosValidos(char** args, int cantidad_args_con_numero){
   return true;
 }
 
-bool _sonArgumentosValidos(char** args, int cantidad_args){
-  if ((cantidad_args < MIN_CANTIDAD_ARGUMENTOS) ||
-                                      cantidad_args > MAX_CANTIDAD_ARGUMENTOS) {
+bool _sonArgumentosValidos(char** args, int cantidad_args) {
+  if ((cantidad_args != MIN_CANTIDAD_ARGUMENTOS) &&
+      (cantidad_args != MAX_CANTIDAD_ARGUMENTOS) &&
+      (cantidad_args != ARGUMENTOS_MODO_AYUDA)) {
     return false;
   }
   if (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
@@ -254,15 +263,19 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
 }
 
 void _generarVideoFFMPEG(char* nombre_archivos) {
-  int tamanio = 41 + strlen(nombre_archivos) + 1; /*+1 por el \0*/
+  int tamanio = FFMPEG_BUFFER_LENGTH + strlen(nombre_archivos);
   char comando_video[tamanio];
   int bytes_nombre_archivo = min(strlen(nombre_archivos),
                                           LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
   memset(comando_video, 0, tamanio);
-  int chars_copiados = snprintf(comando_video, 24, "ffmpeg -framerate 1 -i ");
-  chars_copiados += snprintf(comando_video + chars_copiados, bytes_nombre_archivo + 1, "%s", nombre_archivos);
-  char* formato = "%00d.pbm video.avi";
-  snprintf(comando_video + chars_copiados, 19, "%s", formato);
+  char* primera_parte_comando = "ffmpeg -framerate 1 -i ";
+  int chars_copiados = snprintf(comando_video, str(primera_parte_comando) + 1,
+                                                  "%s", primera_parte_comando);
+  chars_copiados += snprintf(comando_video + chars_copiados,
+                              bytes_nombre_archivo + 1, "%s", nombre_archivos);
+  char* segunda_parte_comando = "%00d.pbm juego.avi";
+  snprintf(comando_video + chars_copiados, strlen(segunda_parte_comando) + 1,
+                                                  "%s", segunda_parte_comando);
   system(comando_video);
 }
 
@@ -288,14 +301,18 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       break;
 
     case ARGUMENTOS_MODO_AYUDA:
-      if (_stringsSonIguales(args[1], "-h")) {
+      if ((_stringsSonIguales(args[1], "-h")) ||
+          (_stringsSonIguales(args[1], "--help"))) {
         mostrarAyuda();
+      } else if ((_stringsSonIguales(args[1], "-V")) ||
+                 (_stringsSonIguales(args[1], "--version"))) {
+        mostrarVersion();
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
       break;
     case ARGUMENTOS_MODO_MANUAL:
-      if (_stringsSonIguales(args[5], "-manual")) {
+      if (_stringsSonIguales(args[INDICE_MODO_DE_JUEGO], "-manual")) {
         estado_de_programa = _ejecutarJuego(posiciones_iniciales,
               atoi(args[INDICE_CANTIDAD_FILAS]),atoi(args[INDICE_CANTIDAD_COLUMNAS]),
               atoi(args[INDICE_CANTIDAD_DE_TURNOS]), args[INDICE_ARCHIVO_DE_ENTRADA], true);
@@ -314,7 +331,7 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
     _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
-
+  
   FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
   if(!posiciones_iniciales) {
     _mostrarError(ERROR_APERTURA_ARCHIVO);

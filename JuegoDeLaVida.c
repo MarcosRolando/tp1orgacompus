@@ -113,7 +113,7 @@ void _imprimirMatriz(Juego_t* juego, int paso, bool quiereEditar) {
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
-      fprintf(stderr, "Fallo la alocacion de memoria\n");
+      fprintf(stderr, "Falló la alocacion de memoria\n");
       break;
     case POSICIONES_INVALIDAS:
       fprintf(stderr, "Formato del archivo inválido\n");
@@ -172,7 +172,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
   if (estado_de_programa != EXITO) {
-    _mostrarError(estado_de_programa);
+    //_mostrarError(estado_de_programa);
     juegoDestruir(&juego);
     return estado_de_programa;
   }

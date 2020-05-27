@@ -40,19 +40,22 @@ int min(int i, int j) {
   return min;
 }
 
-/*
+
 void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso,
                                               char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
-                        CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
+                  CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
-    int chars_copiados = min(strlen(prefijo_archivo_de_salida), LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+    int chars_copiados = min(strlen(prefijo_archivo_de_salida),
+                             LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
     memset(nombre_archivo_salida, 0, tamanio);
-    strncat(nombre_archivo_salida, prefijo_archivo_de_salida, LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
-    snprintf(nombre_archivo_salida + chars_copiados, CHARS_PARA_CANTIDAD_DE_PASOS,
-                                                                  "%d", paso);
+    strncat(nombre_archivo_salida, prefijo_archivo_de_salida,
+            LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+    snprintf(nombre_archivo_salida + chars_copiados,
+             CHARS_PARA_CANTIDAD_DE_PASOS,
+             "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
-    FILE* archivo = fopen(nombre_archivo_salida, "w");
+    FILE *archivo = fopen(nombre_archivo_salida, "w");
     fprintf(archivo, "P1\n%d %d\n", tam_j, tam_i);
     for (size_t i = 0; i < tam_i; i++) {
         for (size_t j = 0; j < tam_j; j++) {
@@ -61,9 +64,9 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
     }
     fclose(archivo);
 }
- */
 
-void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
+
+/*void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
     for (size_t i = 0; i < tam_i; i++) {
         for (size_t j = 0; j < tam_j; j++) {
             printf("%c ", matriz[j + i * tam_j]);
@@ -71,7 +74,7 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
         printf("\n");
     }
 }
-
+*/
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
@@ -133,8 +136,8 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
     bool siguienteTurno = false;
     while (!siguienteTurno) {
         system("clear");
-        _imprimirMatriz(matriz_actual, tam_i, tam_j, i);
-        _inputUsuario(&juego, &siguienteTurno);
+        _imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
+        //_inputUsuario(&juego, &siguienteTurno);
     }
     juegoAvanzarEstado(&juego);
   }

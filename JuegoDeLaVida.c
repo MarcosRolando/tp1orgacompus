@@ -81,7 +81,7 @@ void _escalarCelda(FILE* archivo, char estado) {
     }
 }
 
-void _escalarFila(Juego_t* juego, unsigned int i){
+void _escalarFila(Juego_t* juego, unsigned int i, FILE* archivo){
   for (int j = 0; j < juego->tam_j; j++) { /*Itera las columnas del tablero*/
       if (juego->tablero[j + i * juego->tam_j] == PRENDIDO) {
           _escalarCelda(archivo, PBM_CELDA_PRENDIDA); /*Imprime ESCALA_CELULA_PBM veces*/
@@ -108,7 +108,7 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
     fprintf(archivo, "P1\n%d %d\n", juego->tam_j*ESCALA_CELULA_PBM, juego->tam_i*ESCALA_CELULA_PBM);
     for (int i = 0; i < juego->tam_i; i++) { /*Itera las filas del tablero*/
         for (int k = 0; k < ESCALA_CELULA_PBM; ++k) { /*Repite la fila ESCALA_CELULA_PBM veces*/
-          _escalarFila(juego, i);
+          _escalarFila(juego, i, archivo);
         }
     }
     fclose(archivo);
@@ -260,8 +260,9 @@ void _generarVideoFFMPEG(char* nombre_archivos) {
                                           LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
   memset(comando_video, 0, tamanio);
   int chars_copiados = snprintf(comando_video, 24, "ffmpeg -framerate 1 -i ");
-  chars_copiados += snprintf(comando_video + chars_copiados, bytes_nombre_archivo, nombre_archivos);
-  snprintf(comando_video + chars_copiados, 19, "%00d.pbm video.avi");
+  chars_copiados += snprintf(comando_video + chars_copiados, bytes_nombre_archivo, "%s", nombre_archivos);
+  char* formato = "%00d.pbm video.avi";
+  snprintf(comando_video + chars_copiados, 19, "%s", formato);
   system(comando_video);
 }
 

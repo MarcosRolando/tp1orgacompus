@@ -218,12 +218,14 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
   int estado_de_programa = EXITO;
   if (!_sonArgumentosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
     //fprintf(stderr, "Argumentos inválidos\n");
+    _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
 
   FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
   if(!posiciones_iniciales) {
-    fprintf(stderr, "No se pudo abrir el archivo\n");
+    //fprintf(stderr, "No se pudo abrir el archivo\n");
+    _mostrarError(ERROR_APERTURA_ARCHIVO);
     return ERROR_APERTURA_ARCHIVO;
   }
 

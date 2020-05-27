@@ -118,7 +118,7 @@ static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, i
   }
 }
 
-int _encenderCeldasIniciales(Juego_t* juego, FILE* posiciones_iniciales) { //PREGUNTAR SI PUEDE VENIR CON ERRORES EL ARCHIVO
+int _encenderCeldasIniciales(Juego_t* juego, FILE* posiciones_iniciales) {
   unsigned int i_coord = 0, j_coord = 0;
   int read;
   read = fscanf(posiciones_iniciales, "%u %u\n", &i_coord, &j_coord);
@@ -149,7 +149,6 @@ void juegoDestruir(Juego_t* juego){
 }
 
 
-//PREGUNTAR SI EN EL ARCHIVO LA tablero EMPIEZA EN 0,0 O EN 1,1
 bool juegoAgregarCelda(Juego_t* juego, unsigned int i, unsigned int j){
   if ((i >= juego->tam_i) || (j >= juego->tam_j)) {
     return false;
@@ -162,15 +161,11 @@ bool juegoAgregarCelda(Juego_t* juego, unsigned int i, unsigned int j){
 void juegoAvanzarEstado(Juego_t* juego){
   unsigned char* tablero_siguiente = malloc(juego->tam_i * juego->tam_j * sizeof(char));
   memset(tablero_siguiente, APAGADO, juego->tam_i * juego->tam_j * sizeof(char));
-
-  //COMPLETAR IMPLEMENTACION
   for (size_t i = 0; i < juego->tam_i; i++) {
     for (size_t j = 0; j < juego->tam_j; j++) {
       _actualizarCelda(juego, tablero_siguiente, i, j);
     }
   }
-  //LJDFALJKJDNSDKABFNLAKJFNSKDVNLKSNDAD
-  //ASN KAJDSNF.MAN-AKDF-ALFN.ANF-ÑAKFMA.,NDFASÑD
   free(juego->tablero);
   juego->tablero = tablero_siguiente;
 }

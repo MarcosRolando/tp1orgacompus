@@ -104,7 +104,6 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
     fclose(archivo);
 }
 
-/*
 void _imprimirMatrizManual(Juego_t* juego, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
@@ -121,7 +120,7 @@ void _imprimirMatrizManual(Juego_t* juego, int paso, bool quiereEditar) {
         printf("\n");
     }
 }
-*/
+
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
@@ -179,14 +178,14 @@ void _procesarMatrizManual(Juego_t* juego, int paso_actual) {
   bool quiereEditar = false;
   while (!siguienteTurno) {
     system("clear");
-    _imprimirMatrizManual(&juego, pasoActual, quiereEditar);
-    _inputUsuario(&juego, &siguienteTurno, &quiereEditar);
+    _imprimirMatrizManual(juego, paso_actual, quiereEditar);
+    _inputUsuario(juego, &siguienteTurno, &quiereEditar);
   }
 }
 
 
-int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantidad_de_pasos
-    char* nombre_archivo_de_salida, bool es_modo_manual) {
+int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantidad_de_pasos,
+                        char* nombre_archivo_de_salida, bool es_modo_manual) {
 
   Juego_t juego;
 
@@ -200,7 +199,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   for (int i = 0; i < cantidad_de_pasos; ++i) {
 
     if (es_modo_manual) {
-      _procesarMatrizManual(juego, i);
+      _procesarMatrizManual(&juego, i);
     } else {
       _imprimirMatrizArchivo(&juego, i, nombre_archivo_de_salida);
     }
@@ -244,7 +243,7 @@ bool _sonArgumentosValidos(char** args, int cantidad_args){
   return true;
 }
 
-int _ejecutarComando(char** args, int cantidad_args) {
+int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales) {
   int estado_de_programa = EXITO;
   switch (cantidad_args) {
     case ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA:
@@ -297,7 +296,7 @@ int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
     return ERROR_APERTURA_ARCHIVO;
   }
 
-  estado_de_programa = _ejecutarComando(args, cantidad_args);
+  estado_de_programa = _ejecutarComando(args, cantidad_args, posiciones_iniciales);
 
   fclose(posiciones_iniciales);
   _mostrarError(estado_de_programa);

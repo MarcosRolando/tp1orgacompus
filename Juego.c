@@ -122,8 +122,8 @@ unsigned int vecinos(unsigned char *a, unsigned int i, unsigned int j, unsigned 
   }
   return vecinos_encendidos;
 }
-*/
 
+*/
 /*Actualiza la celda en la nueva tablero*/
 static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, int i, int j) {
   int cant_vecinos = vecinos(juego->tablero, i, j, juego->tam_i, juego->tam_j); //hay que implementar esto

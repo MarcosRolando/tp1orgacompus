@@ -25,7 +25,7 @@
 #define O_ABA_A1 4
 #define O_ABA_A0 0
 
-#define APAGADO '0'
+#define APAGADO '-'
 
 .text
 .align 2

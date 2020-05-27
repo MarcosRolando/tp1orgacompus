@@ -40,9 +40,8 @@ int min(int i, int j) {
   return min;
 }
 
-
-void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso,
-                                              char* prefijo_archivo_de_salida) {
+/*
+void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso, char* prefijo_archivo_de_salida) {
     int tamanio = LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA +
                   CHARS_PARA_CANTIDAD_DE_PASOS + CHARS_EXTENSION_PBM + 1;
     char nombre_archivo_salida[tamanio];
@@ -64,9 +63,10 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
     }
     fclose(archivo);
 }
+*/
 
 
-/*void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
+void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso) {
     for (size_t i = 0; i < tam_i; i++) {
         for (size_t j = 0; j < tam_j; j++) {
             printf("%c ", matriz[j + i * tam_j]);
@@ -74,7 +74,7 @@ void _imprimirMatriz(const unsigned char* matriz, int tam_i, int tam_j, int paso
         printf("\n");
     }
 }
-*/
+
 void _mostrarError(int error) {
   switch (error) {
     case ERROR_DE_MEMORIA:
@@ -134,10 +134,11 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     matriz_actual = juegoObtenerEstadoActual(&juego);
     bool siguienteTurno = false;
+    //_imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
     while (!siguienteTurno) {
         system("clear");
-        _imprimirMatriz(matriz_actual, tam_i, tam_j, i, nombre_archivo_de_salida);
-        //_inputUsuario(&juego, &siguienteTurno);
+        _imprimirMatriz(matriz_actual, tam_i, tam_j, i);
+	_inputUsuario(&juego, &siguienteTurno);
     }
     juegoAvanzarEstado(&juego);
   }

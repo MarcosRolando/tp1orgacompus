@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "CharsCelulas.h"
+#include "Coordenada.h"
 
 /*i es FILA, j es COLUMNA*/
 

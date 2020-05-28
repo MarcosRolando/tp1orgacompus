@@ -5,7 +5,7 @@ void cursorCrear(Cursor_t* cursor) {
   cursor->posicionCursor_j = 0;
 }
 
-bool cursorEstaEnPosicion(Cursor_t* juego, int i, int j) {
+bool cursorEstaEnPosicion(Cursor_t* cursor, int i, int j) {
     return ( (i == cursor->posicionCursor_i)  && (j == cursor->posicionCursor_j) );
 }
 

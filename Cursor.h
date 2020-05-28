@@ -1,6 +1,8 @@
 #ifndef _CURSOR_H_
 #define  _CURSOR_H_
 
+#include <stdbool.h>
+
 typedef struct Cursor {
   int posicionCursor_i;
   int posicionCursor_j;

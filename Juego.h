@@ -18,10 +18,10 @@ int juegoCrear(Juego_t* juego, FILE* posiciones_iniciales, int tam_i, int tam_j)
 void juegoDestruir(Juego_t* juego);
 
 /* Prende la celula que se encuentra en la posicion del cursor */
-void juegoPrenderCelda(Juego_t* juego);
+bool juegoPrenderCelda(Juego_t* juego, unsigned int i, unsigned int j);
 
 /* Apaga la celula que se encuentra en la posicion del cursor */
-void juegoApagarCelda(Juego_t* juego);
+bool juegoApagarCelda(Juego_t* juego, unsigned int i, unsigned int j);
 
 //Intenta agregar la celda en el tablero como una celda inicial encendida
 //Si la posicion se encuentra fuera de las dimensiones del tablero devuelve

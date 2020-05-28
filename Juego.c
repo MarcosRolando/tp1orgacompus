@@ -20,16 +20,6 @@ unsigned int vecinos(unsigned char* a, unsigned int i, unsigned int j, unsigned 
 
 Coordenada_t obtenerCoordenadaToroidal(int i, int j, unsigned int tam_i, unsigned int tam_j);
 
-void juegoPrenderCelda(Juego_t* juego, int i, int j) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
-    juego->tablero[posicion] = PRENDIDO;
-}
-
-void juegoApagarCelda(Juego_t* juego, int i, int j) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
-    juego->tablero[posicion] = APAGADO;
-}
-
 /* Actualiza la celda en la nueva tablero */
 static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, int i, int j) {
   int cant_vecinos = vecinos(juego->tablero, i, j, juego->tam_i, juego->tam_j);
@@ -82,12 +72,17 @@ void juegoDestruir(Juego_t* juego){
 
 /* Retorna true si prende la celula en la posicion fila i y columna j.
 Si trato de prender una celula en una posicion invalida devuelve false */
-bool juegoAgregarCelda(Juego_t* juego, unsigned int i, unsigned int j){
+bool juegoPrenderCelda(Juego_t* juego, unsigned int i, unsigned int j){
   if ((i >= juego->tam_i) || (j >= juego->tam_j)) {
     return false;
   }
   juego->tablero[obtenerIndiceMatriz(juego->tam_j, i, j)] = PRENDIDO;
   return true;
+}
+
+bool juegoApagarCelda(Juego_t* juego, unsigned int i, unsigned int j) {
+    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
+    juego->tablero[posicion] = APAGADO;
 }
 
 /* Actualiza el tablero */

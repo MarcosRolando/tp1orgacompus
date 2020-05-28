@@ -285,9 +285,9 @@ bool _sonArgumentosValidos(char** args, int cantidad_args) {
       break;
     }
   }
-  if ((!cantidad_es_valida) ||
-      (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO))) {
-    return false;
+  if (!cantidad_es_valida) return false;
+  if (cantidad_args != ARGUMENTOS_MODO_CONSULTA) {
+      return (_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO));
   }
   return true;
 }
@@ -335,10 +335,7 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       if ((_stringsSonIguales(args[1], "-h")) ||
           (_stringsSonIguales(args[1], "--help"))) {
         mostrarAyuda();
-      } else {
-        estado_de_programa = ARGUMENTOS_ERRONEOS;
-      }
-      if ((_stringsSonIguales(args[1], "-V")) ||
+      } else if ((_stringsSonIguales(args[1], "-V")) ||
           (_stringsSonIguales(args[1], "--version"))) {
           mostrarVersion();
       } else {
@@ -360,21 +357,24 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
 
 int juegoDeLaVidaEjecutar(char** args, int cantidad_args) {
   int estado_de_programa = EXITO;
+  FILE* posiciones_iniciales = NULL;
 
   if (!_sonArgumentosValidos(args, cantidad_args)) {
     _mostrarError(ARGUMENTOS_ERRONEOS);
     return ARGUMENTOS_ERRONEOS;
   }
 
-  FILE* posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
-  if(!posiciones_iniciales) {
-    _mostrarError(ERROR_APERTURA_ARCHIVO);
-    return ERROR_APERTURA_ARCHIVO;
+  if (cantidad_args != ARGUMENTOS_MODO_CONSULTA) {
+      posiciones_iniciales = fopen(args[INDICE_ARCHIVO_DE_ENTRADA], "r");
+      if(!posiciones_iniciales) {
+          _mostrarError(ERROR_APERTURA_ARCHIVO);
+          return ERROR_APERTURA_ARCHIVO;
+      }
   }
 
   estado_de_programa = _ejecutarComando(args, cantidad_args, posiciones_iniciales);
 
-  fclose(posiciones_iniciales);
+  if (posiciones_iniciales != NULL) fclose(posiciones_iniciales);
   _mostrarError(estado_de_programa);
   return estado_de_programa;
 }

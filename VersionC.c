@@ -1,4 +1,5 @@
 #include "Coordenada.h"
+#include "CharsCelulas.h"
 
 int obtenerIndiceMatriz(int tam_j, unsigned int i, unsigned int j) {
   return j + i * tam_j;

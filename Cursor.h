@@ -4,7 +4,7 @@
 typedef struct Cursor {
   int posicionCursor_i;
   int posicionCursor_j;
-} Cursor_t
+} Cursor_t;
 
 
 /* Inicializa el objeto Cursor */

@@ -34,8 +34,8 @@ obtenerIndiceMatriz:
 
         /* seteo valor de retorno */
         lw v0, O_A2(fp) /* v0 = j */
-        mul t0, a0, a1  /* t0 = i * tam_j */
-        add v0, v0, t0  /* v0 = j + i * tam_j */
+        mul t0, a0, a1  /* t0 = tam_j * i */
+        add v0, v0, t0  /* v0 = j + tam_j * i */
 
         /* stack unwindig */
         lw gp, O_GP(sp)

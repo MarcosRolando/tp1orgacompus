@@ -84,7 +84,7 @@ repeat: or t2, s1, s0 /*si s1 y s0 son 0 entonces t2 sera 0*/ /*algoritmo del if
 	      sw v0, O_LTA_CVI(fp) /*guardo coordenada.i*/
 	      sw v1, O_LTA_CVJ(fp) /*guardo coordenada.j*/
 
-      	lw a0, O_A4(fp) /*cuarto argumento, N*/
+      	lw a0, O_A4(fp) /*primer argumento, N*/
         move a1, v0 /*cargo coordenadaVecino.i en a1*/
         move a2, v1 /*cargo coordenadaVecino.j en a2*/
         jal obtenerIndiceMatriz /*Retorna en v0 posVecino*/

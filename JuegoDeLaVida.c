@@ -181,10 +181,10 @@ void _inputUsuario(Juego_t* juego, Cursor_t* cursor, bool* siguienteTurno, bool*
             cursorMoverAbajo(cursor);
             break;
         case CHAR_PRENDER_CELULA:
-            juegoPrenderCelda(juego);
+            juegoPrenderCelda(juego, cursor->posicionCursor_i, cursor-posicionCursor_j);
             break;
         case CHAR_APAGAR_CELULA:
-            juegoApagarCelda(juego);
+            juegoApagarCelda(juego, cursor->posicionCursor_i, cursor-posicionCursor_j);
             break;
         default:
             *quiereEditar = false;

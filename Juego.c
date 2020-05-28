@@ -19,13 +19,13 @@ unsigned int vecinos(unsigned char* a, unsigned int i, unsigned int j, unsigned 
 
 Coordenada_t obtenerCoordenadaToroidal(int i, int j, unsigned int tam_i, unsigned int tam_j);
 
-void juegoPrenderCelda(Juego_t* juego) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
+void juegoPrenderCelda(Juego_t* juego, int i, int j) {
+    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
     juego->tablero[posicion] = PRENDIDO;
 }
 
-void juegoApagarCelda(Juego_t* juego) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
+void juegoApagarCelda(Juego_t* juego, int i, int j) {
+    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
     juego->tablero[posicion] = APAGADO;
 }
 

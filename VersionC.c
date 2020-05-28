@@ -33,16 +33,13 @@ unsigned int vecinos(unsigned char *a, unsigned int i, unsigned int j, unsigned 
   int posVecino = 0;
   for (int k = -1; k < 2; k++) {
     for (int l = -1; l < 2; l++) {
-
       if (k != 0 || l != 0) {
-        //REVISAR SI ESTO ANDA
         coordenadaVecino = obtenerCoordenadaToroidal(i + k, j + l, M, N);
         posVecino = obtenerIndiceMatriz(N, coordenadaVecino.i, coordenadaVecino.j);
         if (a[posVecino] == PRENDIDO) {
             vecinos_encendidos++;
         }
       }
-
     }
   }
   return vecinos_encendidos;

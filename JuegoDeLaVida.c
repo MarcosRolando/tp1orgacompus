@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "Juego.h"
 #include "Estado.h"
+#include "Cursor.h"
 
 #define ESCALA_CELULA_PBM 30
 
@@ -76,7 +77,7 @@ int min(int i, int j) {
   return min;
 }
 
-
+/* Compara los dos strings que recibe y devuelve true si son iguales */
 bool _stringsSonIguales(const char* string1, const char* string2) {
   if (strlen(string1) != strlen(string2)) {
     return false;
@@ -124,10 +125,10 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
     fclose(archivo);
 }
 
-void _imprimirMatrizManual(Juego_t* juego, int paso, bool quiereEditar) {
+void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
-            if (juegoEstaElCursor(juego, i, j) && quiereEditar) {
+            if (cursorEstaEnPosicion(juego, i, j) && quiereEditar) {
                 if (juego->tablero[j + i * juego->tam_j] == APAGADO) {
                     printf(CURSOR_CELDA_APAGADA);
                 } else {
@@ -168,16 +169,16 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
             *siguienteTurno = true;
             break;
         case CHAR_MOVERSE_IZQUIERDA:
-            juegoMoverCursorIzquierda(juego);
+            cursorMoverIzquierda(cursor);
             break;
         case CHAR_MOVERSE_DERECHA:
-            juegoMoverCursorDerecha(juego);
+            cursorMoverDerecha(cursor);
             break;
         case CHAR_MOVERSE_ARRIBA:
-            juegoMoverCursorArriba(juego);
+            cursorMoverArriba(cursor);
             break;
         case CHAR_MOVERSE_ABAJO:
-            juegoMoverCursorAbajo(juego);
+            cursorMoverAbajo(cursor);
             break;
         case CHAR_PRENDER_CELULA:
             juegoPrenderCelda(juego);
@@ -193,12 +194,12 @@ void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
 }
 
 
-void _procesarMatrizManual(Juego_t* juego, int paso_actual) {
+void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual) {
   bool siguienteTurno = false;
   bool quiereEditar = false;
   while (!siguienteTurno) {
     system("clear");
-    _imprimirMatrizManual(juego, paso_actual, quiereEditar);
+    _imprimirMatrizManual(juego, cursor, paso_actual, quiereEditar);
     _inputUsuario(juego, &siguienteTurno, &quiereEditar);
   }
 }
@@ -208,6 +209,8 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
                         char* nombre_archivo_de_salida, bool es_modo_manual) {
 
   Juego_t juego;
+  Cursor_t cursor;
+  cursorCrear(&cursor);
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
   if (estado_de_programa != EXITO) {
@@ -217,13 +220,14 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     if (es_modo_manual) {
-      _procesarMatrizManual(&juego, i);
+      _procesarMatrizManual(&juego, &cursor, i);
     } else {
       _imprimirMatrizArchivo(&juego, i, nombre_archivo_de_salida);
     }
     juegoAvanzarEstado(&juego);
   }
 
+  cursorDestruir(&cursor);
   juegoDestruir(&juego);
   return EXITO;
 }

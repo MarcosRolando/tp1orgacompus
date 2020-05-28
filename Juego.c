@@ -19,36 +19,6 @@ unsigned int vecinos(unsigned char* a, unsigned int i, unsigned int j, unsigned 
 
 Coordenada_t obtenerCoordenadaToroidal(int i, int j, unsigned int tam_i, unsigned int tam_j);
 
-
-
-bool juegoEstaElCursor(Juego_t* juego, int i, int j) {
-    return ( (i == juego->posicionCursor_i)  && (j == juego->posicionCursor_j) );
-}
-
-void juegoMoverCursorIzquierda(Juego_t* juego) {
-    if (juego->posicionCursor_j > 0) {
-        juego->posicionCursor_j--;
-    }
-}
-
-void juegoMoverCursorDerecha(Juego_t* juego) {
-    if (juego->posicionCursor_j < (juego->tam_j - 1)) {
-        juego->posicionCursor_j++;
-    }
-}
-
-void juegoMoverCursorArriba(Juego_t* juego) {
-    if (juego->posicionCursor_i > 0) {
-        juego->posicionCursor_i--;
-    }
-}
-
-void juegoMoverCursorAbajo(Juego_t* juego) {
-    if (juego->posicionCursor_i < (juego->tam_i - 1)) {
-        juego->posicionCursor_i++;
-    }
-}
-
 void juegoPrenderCelda(Juego_t* juego) {
     int posicion = obtenerIndiceMatriz(juego->tam_j, juego->posicionCursor_i, juego->posicionCursor_j);
     juego->tablero[posicion] = PRENDIDO;
@@ -59,9 +29,9 @@ void juegoApagarCelda(Juego_t* juego) {
     juego->tablero[posicion] = APAGADO;
 }
 
-/*Actualiza la celda en la nueva tablero*/
+/* Actualiza la celda en la nueva tablero */
 static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, int i, int j) {
-  int cant_vecinos = vecinos(juego->tablero, i, j, juego->tam_i, juego->tam_j); //hay que implementar esto
+  int cant_vecinos = vecinos(juego->tablero, i, j, juego->tam_i, juego->tam_j);
   if ( (cant_vecinos < CANTIDAD_MINIMA_SUPERVIVENCIA) || (cant_vecinos > CANTIDAD_MAXIMA_SUPERVIVENCIA) ) {
     tablero_siguiente[obtenerIndiceMatriz(juego->tam_j, i, j)] = APAGADO;
   } else if (cant_vecinos == CANTIDAD_PARA_NACER) {
@@ -74,6 +44,9 @@ static void _actualizarCelda(Juego_t* juego, unsigned char* tablero_siguiente, i
   }
 }
 
+/* Enciende las celulas en las posiciones que indica el archivo "posiciones_iniciales".
+Retorna un codigo de error si hay algun problema prendiendo alguna celula y EXITO
+en caso contrario */
 int _encenderCeldasIniciales(Juego_t* juego, FILE* posiciones_iniciales) {
   unsigned int i_coord = 0, j_coord = 0;
   int read;
@@ -86,6 +59,7 @@ int _encenderCeldasIniciales(Juego_t* juego, FILE* posiciones_iniciales) {
   return EXITO;
 }
 
+/* Crea el tablero del juego */
 int juegoCrear(Juego_t* juego, FILE* posiciones_iniciales, int tam_i, int tam_j){
   juego->tablero = malloc(tam_i * tam_j * sizeof(char));
   if (!juego->tablero) {
@@ -100,11 +74,13 @@ int juegoCrear(Juego_t* juego, FILE* posiciones_iniciales, int tam_i, int tam_j)
   return _encenderCeldasIniciales(juego, posiciones_iniciales);
 }
 
+/* Libera los recursos del juego */
 void juegoDestruir(Juego_t* juego){
   free(juego->tablero);
 }
 
-
+/* Retorna true si prende la celula en la posicion fila i y columna j.
+Si trato de prender una celula en una posicion invalida devuelve false */
 bool juegoAgregarCelda(Juego_t* juego, unsigned int i, unsigned int j){
   if ((i >= juego->tam_i) || (j >= juego->tam_j)) {
     return false;
@@ -113,7 +89,7 @@ bool juegoAgregarCelda(Juego_t* juego, unsigned int i, unsigned int j){
   return true;
 }
 
-
+/* Actualiza el tablero */
 void juegoAvanzarEstado(Juego_t* juego){
   unsigned char* tablero_siguiente = malloc(juego->tam_i * juego->tam_j * sizeof(char));
   memset(tablero_siguiente, APAGADO, juego->tam_i * juego->tam_j * sizeof(char));
@@ -126,7 +102,7 @@ void juegoAvanzarEstado(Juego_t* juego){
   juego->tablero = tablero_siguiente;
 }
 
-
+/* Devuelve el tablero del juego */
 const unsigned char* juegoObtenerEstadoActual(Juego_t* juego){
   return juego->tablero;
 }

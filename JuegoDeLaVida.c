@@ -136,6 +136,8 @@ void _imprimirComandos(Juego_t* juego, int paso, int cantidad_de_pasos) {
   printf("Abajo: s\n");
   printf("Izquierda: a\n");
   printf("Derecha: d\n");
+  printf("Encender celda: p\n");
+  printf("Apagar celda: o\n");
   printf("Siguiente turno: n\n");
 }
 

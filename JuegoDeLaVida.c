@@ -113,6 +113,7 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
              CHARS_PARA_CANTIDAD_DE_PASOS,
              "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
+    printf("Grabando %spaso.pbm\n", prefijo_archivo_de_salida);
     FILE *archivo = fopen(nombre_archivo_salida, "w");
     fprintf(archivo, "P1\n%d %d\n", juego->tam_j*ESCALA_CELULA_PBM, juego->tam_i*ESCALA_CELULA_PBM);
     for (int i = 0; i < juego->tam_i; i++) { /*Itera las filas del tablero*/
@@ -211,6 +212,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
   Juego_t juego;
   Cursor_t cursor;
   cursorCrear(&cursor);
+  printf("Leyendo estado inicial...\n");
   int estado_de_programa = juegoCrear(&juego, posiciones_iniciales, tam_i, tam_j);
 
   if (estado_de_programa != EXITO) {
@@ -227,6 +229,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
     juegoAvanzarEstado(&juego);
   }
 
+  printf("Listo\n");
   cursorDestruir(&cursor);
   juegoDestruir(&juego);
   return EXITO;

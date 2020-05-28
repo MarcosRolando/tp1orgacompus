@@ -124,7 +124,17 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
     fclose(archivo);
 }
 
-void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar) {
+void _imprimirComandos(Juego_t* juego, int paso, int cantidad_de_pasos) {
+  printf("Turno %d/%d\n\n", paso, cantidad_de_pasos);
+  printf("Arriba: w\n");
+  printf("Abajo: s\n");
+  printf("Izquierda: a\n");
+  printf("Derecha: d\n");
+  printf("Siguiente turno: n\n");
+}
+
+void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar
+                                                              int cantidad_de_pasos) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
             if (cursorEstaEnPosicion(cursor, i, j) && quiereEditar) {
@@ -139,6 +149,7 @@ void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quie
         }
         printf("\n");
     }
+    _imprimirComandos(juego, paso, cantidad_de_pasos);
 }
 
 void _mostrarError(int error) {
@@ -195,12 +206,13 @@ void _inputUsuario(Juego_t* juego, Cursor_t* cursor, bool* siguienteTurno, bool*
 }
 
 
-void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual) {
+void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual
+                                                      int cantidad_de_pasos) {
   bool siguienteTurno = false;
   bool quiereEditar = false;
   while (!siguienteTurno) {
     system("clear");
-    _imprimirMatrizManual(juego, cursor, paso_actual, quiereEditar);
+    _imprimirMatrizManual(juego, cursor, paso_actual, quiereEditar, cantidad_de_pasos);
     _inputUsuario(juego, cursor, &siguienteTurno, &quiereEditar);
   }
 }
@@ -222,7 +234,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
 
   for (int i = 0; i < cantidad_de_pasos; ++i) {
     if (es_modo_manual) {
-      _procesarMatrizManual(&juego, &cursor, i);
+      _procesarMatrizManual(&juego, &cursor, i, cantidad_de_pasos);
     } else {
       _imprimirMatrizArchivo(&juego, i, nombre_archivo_de_salida);
     }

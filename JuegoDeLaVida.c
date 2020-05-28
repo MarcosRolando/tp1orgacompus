@@ -159,7 +159,7 @@ void _mostrarError(int error) {
   }
 }
 
-void _inputUsuario(Juego_t* juego, bool* siguienteTurno, bool* quiereEditar) {
+void _inputUsuario(Juego_t* juego, Cursor_t* cursor, bool* siguienteTurno, bool* quiereEditar) {
     printf("\n");
     system ("/bin/stty raw");
     int input = getchar();
@@ -200,7 +200,7 @@ void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual) {
   while (!siguienteTurno) {
     system("clear");
     _imprimirMatrizManual(juego, cursor, paso_actual, quiereEditar);
-    _inputUsuario(juego, &siguienteTurno, &quiereEditar);
+    _inputUsuario(juego, cursor, &siguienteTurno, &quiereEditar);
   }
 }
 

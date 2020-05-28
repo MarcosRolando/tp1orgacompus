@@ -133,7 +133,7 @@ void _imprimirComandos(Juego_t* juego, int paso, int cantidad_de_pasos) {
   printf("Siguiente turno: n\n");
 }
 
-void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar
+void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar,
                                                               int cantidad_de_pasos) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
@@ -206,7 +206,7 @@ void _inputUsuario(Juego_t* juego, Cursor_t* cursor, bool* siguienteTurno, bool*
 }
 
 
-void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual
+void _procesarMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso_actual,
                                                       int cantidad_de_pasos) {
   bool siguienteTurno = false;
   bool quiereEditar = false;
@@ -241,7 +241,7 @@ int _ejecutarJuego(FILE* posiciones_iniciales, int tam_i, int tam_j, int cantida
     juegoAvanzarEstado(&juego);
   }
 
-  printf("Listo\n");
+  if (!es_modo_manual) printf("Listo\n");
   cursorDestruir(&cursor);
   juegoDestruir(&juego);
   return EXITO;

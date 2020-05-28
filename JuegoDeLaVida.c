@@ -14,7 +14,7 @@
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
 #define ARGUMENTOS_MODO_CONSULTA 2
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
-#define CHARS_PARA_CANTIDAD_DE_PASOS 3
+#define CHARS_PARA_CANTIDAD_DE_PASOS 5
 #define CHARS_EXTENSION_PBM 4
 #define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
 #define CANTIDAD_DE_MODOS 4
@@ -42,8 +42,8 @@
 #define MIN_CHAR_NUMERO 48
 #define MAX_CHAR_NUMERO 57
 
-#define PBM_CELDA_PRENDIDA '1'
-#define PBM_CELDA_APAGADA '0'
+#define PBM_CELDA_PRENDIDA '0'
+#define PBM_CELDA_APAGADA '1'
 
 void mostrarAyuda() {
     printf("Uso:\n"
@@ -115,9 +115,9 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
             LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
     snprintf(nombre_archivo_salida + chars_copiados,
              CHARS_PARA_CANTIDAD_DE_PASOS,
-             "%d", paso);
+             "_%03d", paso + 1);
     strcat(nombre_archivo_salida, ".pbm");
-    printf("Grabando %s%d.pbm\n", prefijo_archivo_de_salida, paso);
+    printf("Grabando %s\n", nombre_archivo_salida);
     FILE *archivo = fopen(nombre_archivo_salida, "w");
     fprintf(archivo, "P1\n%d %d\n", juego->tam_j*ESCALA_CELULA_PBM, juego->tam_i*ESCALA_CELULA_PBM);
     for (int i = 0; i < juego->tam_i; i++) { /*Itera las filas del tablero*/
@@ -293,17 +293,18 @@ bool _sonArgumentosValidos(char** args, int cantidad_args) {
 }
 
 void _generarVideoFFMPEG(char* nombre_archivos) {
-  int tamanio = FFMPEG_BUFFER_LENGTH + strlen(nombre_archivos);
-  char comando_video[tamanio];
   int bytes_nombre_archivo = min(strlen(nombre_archivos),
-                                          LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+                                   LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA);
+  int tamanio = FFMPEG_BUFFER_LENGTH + bytes_nombre_archivo + 1;
+  char comando_video[tamanio];
   memset(comando_video, 0, tamanio);
   char* primera_parte_comando = "ffmpeg -framerate 1 -i ";
   int chars_copiados = snprintf(comando_video, strlen(primera_parte_comando) + 1,
                                                   "%s", primera_parte_comando);
-  chars_copiados += snprintf(comando_video + chars_copiados,
-                              bytes_nombre_archivo + 1, "%s", nombre_archivos);
-  char* segunda_parte_comando = "%00d.pbm juego.avi";
+  snprintf(comando_video + chars_copiados,bytes_nombre_archivo + 1, "%s",
+          nombre_archivos);
+  chars_copiados += bytes_nombre_archivo;
+  char* segunda_parte_comando = "_%03d.pbm juego.avi";
   snprintf(comando_video + chars_copiados, strlen(segunda_parte_comando) + 1,
                                                   "%s", segunda_parte_comando);
   system(comando_video);

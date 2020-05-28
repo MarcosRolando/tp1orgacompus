@@ -12,8 +12,7 @@
 #define ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA 7
 #define ARGUMENTOS_MODO_MANUAL 6
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
-#define ARGUMENTOS_MODO_AYUDA 2
-#define ARGUMENTOS_MODO_VERSION 2
+#define ARGUMENTOS_MODO_CONSULTA 2
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
 #define CHARS_PARA_CANTIDAD_DE_PASOS 3
 #define CHARS_EXTENSION_PBM 4
@@ -312,15 +311,13 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       _generarVideoFFMPEG(args[INDICE_ARCHIVO_DE_ENTRADA]);
       break;
 
-    case ARGUMENTOS_MODO_AYUDA:
+    case ARGUMENTOS_MODO_CONSULTA:
       if ((_stringsSonIguales(args[1], "-h")) ||
           (_stringsSonIguales(args[1], "--help"))) {
         mostrarAyuda();
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }
-      break;
-    case ARGUMENTOS_MODO_VERSION:
       if ((_stringsSonIguales(args[1], "-V")) ||
           (_stringsSonIguales(args[1], "--version"))) {
           mostrarVersion();

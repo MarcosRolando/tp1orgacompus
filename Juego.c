@@ -59,8 +59,6 @@ int juegoCrear(Juego_t* juego, FILE* posiciones_iniciales, int tam_i, int tam_j)
   memset(juego->tablero, APAGADO, tam_i * tam_j * sizeof(char));
   juego->tam_i = tam_i;
   juego->tam_j = tam_j;
-  juego->posicionCursor_i = 0;
-  juego->posicionCursor_j = 0;
 
   return _encenderCeldasIniciales(juego, posiciones_iniciales);
 }

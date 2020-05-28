@@ -62,8 +62,9 @@ void mostrarAyuda() {
            "Los archivos de salida se llamarán estado_n.pbm.\n"
            "Si no se da un prefijo para los archivos de salida,\n"
            "el prefijo será el nombre del archivo de entrada.\n"
-           "Si en vez de -o se escribe manual y no se agrega el prefijo de los"
-           "archivos de salida entonces se correrá el programa en modo manual.\n");
+           "Si en vez de -o se escribe -manual y no se agrega el prefijo de los"
+           " archivos de salida entonces se correrá el programa en modo "
+           "manual.\n");
 }
 
 void mostrarVersion() {

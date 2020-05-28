@@ -113,7 +113,7 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
              CHARS_PARA_CANTIDAD_DE_PASOS,
              "%d", paso);
     strcat(nombre_archivo_salida, ".pbm");
-    printf("Grabando %spaso.pbm\n", prefijo_archivo_de_salida);
+    printf("Grabando %s%d.pbm\n", prefijo_archivo_de_salida, paso);
     FILE *archivo = fopen(nombre_archivo_salida, "w");
     fprintf(archivo, "P1\n%d %d\n", juego->tam_j*ESCALA_CELULA_PBM, juego->tam_i*ESCALA_CELULA_PBM);
     for (int i = 0; i < juego->tam_i; i++) { /*Itera las filas del tablero*/

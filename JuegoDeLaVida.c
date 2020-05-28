@@ -13,16 +13,15 @@
 #define ARGUMENTOS_MODO_MANUAL 6
 #define ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA 5
 #define ARGUMENTOS_MODO_AYUDA 2
+#define ARGUMENTOS_MODO_VERSION 2
 #define LARGO_MAXIMO_NOMBRE_ARCHIVO_SALIDA 20
 #define CHARS_PARA_CANTIDAD_DE_PASOS 3
 #define CHARS_EXTENSION_PBM 4
 #define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
+#define CANTIDAD_DE_MODOS 5
 
 #define CURSOR_CELDA_APAGADA  "+ "
 #define CURSOR_CELDA_PRENDIDA "0 "
-
-#define MIN_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA
-#define MAX_CANTIDAD_ARGUMENTOS ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA
 
 #define INDICE_CANTIDAD_DE_TURNOS 1
 #define INDICE_CANTIDAD_FILAS 2
@@ -257,12 +256,19 @@ bool _sonNumerosValidos(char** args, int cantidad_args_con_numero) {
 }
 
 bool _sonArgumentosValidos(char** args, int cantidad_args) {
-  if ((cantidad_args != MIN_CANTIDAD_ARGUMENTOS) &&
-      (cantidad_args != MAX_CANTIDAD_ARGUMENTOS) &&
-      (cantidad_args != ARGUMENTOS_MODO_AYUDA)) {
-    return false;
+  const int cantidades_argumentos[CANTIDAD_DE_MODOS] = {
+                  ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA,
+                  ARGUMENTOS_MODO_MANUAL, ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA,
+                  ARGUMENTOS_MODO_AYUDA, ARGUMENTOS_MODO_VERSION};
+  bool cantidad_es_valida = false;
+  for (int i = 0; i < CANTIDAD_DE_MODOS; i++) {
+    if (cantidades_argumentos[i] == cantidad_args) {
+      cantidad_es_valida = true;
+      break;
+    }
   }
-  if (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO)) {
+  if ((!cantidad_es_valida) ||
+      (!_sonNumerosValidos(args + 1, CANTIDAD_ARGUMENTOS_CON_NUMERO))) {
     return false;
   }
   return true;
@@ -310,9 +316,14 @@ int _ejecutarComando(char** args, int cantidad_args, FILE* posiciones_iniciales)
       if ((_stringsSonIguales(args[1], "-h")) ||
           (_stringsSonIguales(args[1], "--help"))) {
         mostrarAyuda();
-      } else if ((_stringsSonIguales(args[1], "-V")) ||
-                 (_stringsSonIguales(args[1], "--version"))) {
-        mostrarVersion();
+      } else {
+        estado_de_programa = ARGUMENTOS_ERRONEOS;
+      }
+      break;
+    case ARGUMENTOS_MODO_VERSION:
+      if ((_stringsSonIguales(args[1], "-V")) ||
+          (_stringsSonIguales(args[1], "--version"))) {
+          mostrarVersion();
       } else {
         estado_de_programa = ARGUMENTOS_ERRONEOS;
       }

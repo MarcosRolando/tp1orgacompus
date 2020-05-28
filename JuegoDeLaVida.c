@@ -58,7 +58,7 @@ void mostrarAyuda() {
            "Ejemplos:\n"
            "  conway 10 20 20 glider -o estado\n"
            "  Representa 10 iteraciones del Juego de la Vida en una matriz de "
-           "  20x20,\n"
+           "20x20,\n"
            "  con un estado inicial tomado del archivo ‘‘glider’’.\n"
            "  Los archivos de salida se llamarán estado_n.pbm.\n"
            "  Si no se da un prefijo para los archivos de salida,\n"

@@ -17,7 +17,7 @@
 #define CHARS_PARA_CANTIDAD_DE_PASOS 3
 #define CHARS_EXTENSION_PBM 4
 #define CANTIDAD_ARGUMENTOS_CON_NUMERO 3
-#define CANTIDAD_DE_MODOS 5
+#define CANTIDAD_DE_MODOS 4
 
 #define CURSOR_CELDA_APAGADA  "+ "
 #define CURSOR_CELDA_PRENDIDA "0 "
@@ -258,7 +258,7 @@ bool _sonArgumentosValidos(char** args, int cantidad_args) {
   const int cantidades_argumentos[CANTIDAD_DE_MODOS] = {
                   ARGUMENTOS_EJECUTANDO_CON_NOMBRE_SALIDA,
                   ARGUMENTOS_MODO_MANUAL, ARGUMENTOS_EJECUTANDO_SIN_NOMBRE_SALIDA,
-                  ARGUMENTOS_MODO_AYUDA, ARGUMENTOS_MODO_VERSION};
+                  ARGUMENTOS_MODO_CONSULTA};
   bool cantidad_es_valida = false;
   for (int i = 0; i < CANTIDAD_DE_MODOS; i++) {
     if (cantidades_argumentos[i] == cantidad_args) {

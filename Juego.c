@@ -43,7 +43,7 @@ int _encenderCeldasIniciales(Juego_t* juego, FILE* posiciones_iniciales) {
   int read;
   read = fscanf(posiciones_iniciales, "%u %u\n", &i_coord, &j_coord);
   while (read == 2) {
-    if(!juegoAgregarCelda(juego, i_coord, j_coord)) return POSICIONES_INVALIDAS;
+    if(!juegoPrenderCelda(juego, i_coord, j_coord)) return POSICIONES_INVALIDAS;
     read = fscanf(posiciones_iniciales, "%u %u\n", &i_coord, &j_coord);
   }
   if (!feof(posiciones_iniciales)) return POSICIONES_INVALIDAS;
@@ -79,8 +79,11 @@ bool juegoPrenderCelda(Juego_t* juego, unsigned int i, unsigned int j){
 }
 
 bool juegoApagarCelda(Juego_t* juego, unsigned int i, unsigned int j) {
-    int posicion = obtenerIndiceMatriz(juego->tam_j, i, j);
-    juego->tablero[posicion] = APAGADO;
+    if ((i >= juego->tam_i) || (j >= juego->tam_j)) {
+        return false;
+    }
+    juego->tablero[obtenerIndiceMatriz(juego->tam_j, i, j)] = APAGADO;
+    return true;
 }
 
 /* Actualiza el tablero */

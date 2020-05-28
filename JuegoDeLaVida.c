@@ -128,7 +128,7 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
 void _imprimirMatrizManual(Juego_t* juego, Cursor_t* cursor, int paso, bool quiereEditar) {
     for (size_t i = 0; i < juego->tam_i; i++) {
         for (size_t j = 0; j < juego->tam_j; j++) {
-            if (cursorEstaEnPosicion(juego, i, j) && quiereEditar) {
+            if (cursorEstaEnPosicion(cursor, i, j) && quiereEditar) {
                 if (juego->tablero[j + i * juego->tam_j] == APAGADO) {
                     printf(CURSOR_CELDA_APAGADA);
                 } else {
@@ -172,19 +172,21 @@ void _inputUsuario(Juego_t* juego, Cursor_t* cursor, bool* siguienteTurno, bool*
             cursorMoverIzquierda(cursor);
             break;
         case CHAR_MOVERSE_DERECHA:
-            cursorMoverDerecha(cursor);
+            cursorMoverDerecha(cursor, juego->tam_j);
             break;
         case CHAR_MOVERSE_ARRIBA:
             cursorMoverArriba(cursor);
             break;
         case CHAR_MOVERSE_ABAJO:
-            cursorMoverAbajo(cursor);
+            cursorMoverAbajo(cursor, juego->tam_i);
             break;
         case CHAR_PRENDER_CELULA:
-            juegoPrenderCelda(juego, cursor->posicionCursor_i, cursor-posicionCursor_j);
+            juegoPrenderCelda(juego, cursor->posicionCursor_i,
+                                                    cursor->posicionCursor_j);
             break;
         case CHAR_APAGAR_CELULA:
-            juegoApagarCelda(juego, cursor->posicionCursor_i, cursor-posicionCursor_j);
+            juegoApagarCelda(juego, cursor->posicionCursor_i,
+                                                    cursor->posicionCursor_j);
             break;
         default:
             *quiereEditar = false;

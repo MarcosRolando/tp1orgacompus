@@ -125,7 +125,7 @@ void _imprimirMatrizArchivo(Juego_t* juego, int paso, char* prefijo_archivo_de_s
 }
 
 void _imprimirComandos(Juego_t* juego, int paso, int cantidad_de_pasos) {
-  printf("Turno %d/%d\n\n", paso, cantidad_de_pasos);
+  printf("Turno %d/%d\n\n", paso + 1, cantidad_de_pasos);
   printf("Arriba: w\n");
   printf("Abajo: s\n");
   printf("Izquierda: a\n");

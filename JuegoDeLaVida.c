@@ -54,13 +54,16 @@ void mostrarAyuda() {
            "-h, --help Imprime este mensaje.\n"
            "-V, --version Da la versión del programa.\n"
            "-o Prefijo de los archivos de salida.\n"
+           "-manual Prefijo para modo de edición del tablero en ejecución.\n"
            "Ejemplos:"
            "conway 10 20 20 glider -o estado\n"
            "Representa 10 iteraciones del Juego de la Vida en una matriz de 20x20,\n"
            "con un estado inicial tomado del archivo ‘‘glider’’.\n"
            "Los archivos de salida se llamarán estado_n.pbm.\n"
            "Si no se da un prefijo para los archivos de salida,\n"
-           "el prefijo será el nombre del archivo de entrada.);\n");
+           "el prefijo será el nombre del archivo de entrada.\n"
+           "Si en vez de -o se escribe manual y no se agrega el prefijo de los"
+           "archivos de salida entonces se correrá el programa en modo manual.\n");
 }
 
 void mostrarVersion() {
